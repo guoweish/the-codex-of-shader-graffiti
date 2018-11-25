@@ -1,7 +1,7 @@
-# the-codex-of-shader-graffiti
+# The Codex of Shader Graffiti
 简介：一本WebGL着色器入门教程，关于绘制基本几何形体、粒子系统、生成艺术等等；
+
 基于原生WebGL20，原因无他：“玩”要玩原生，“用”要用three！
-希望本教程能持之以恒不弃坑...
 
 ### CH-01：一张白纸；
 ### CH-02：点线面体；
