@@ -14,21 +14,34 @@ var FSHADER_SOURCE =
   '#ifdef GL_ES\n' +
   'precision mediump float;\n' +
   '#endif\n' +
-  'uniform sampler2D u_Sampler;\n' +
+  'uniform float u_Time;\n' +
+  'uniform float u_hwr;\n' +
   'varying vec2 v_TexCoord;\n' +
   'void main() {\n' +
-  '  float distPix = distance(v_TexCoord, vec2(0.5, 0.5));\n' +
-  '  float isCircle = 1.0 - step(0.3, distPix);\n' +
-  '  gl_FragColor = vec4(vec3(isCircle), 1.0);\n' +
+  '  float r = 0.5 + sin(u_Time)/3.0;\n' +
+  '  vec2 center = vec2(0.0, 0.0);\n' +
+  '  vec2 uv = v_TexCoord - 0.5;\n' +
+  '  uv.x /= u_hwr;\n' +
+  '  float col = 0.0;\n' +
+  '  float dist = distance(uv.xy, center.xy);\n' +
+  '  if(dist < r) {\n' +
+  '    col = 1.0 - smoothstep(0.0, r, dist);\n' +
+  '  }\n' +
+  '  gl_FragColor = vec4(vec3(col),1.0);\n' +
+  '  gl_FragColor *= vec4(1.0, 2.5, 3.0, 1.0);\n' +
   '}\n';
 
 function main() { 
   var windowWidth = window.innerWidth;
   var windowHeight = window.innerHeight;
+  var heightWidthRatio = windowHeight / windowWidth;
 
   var canvas = document.getElementById('example');  
   canvas.width = windowWidth;
   canvas.height = windowHeight;
+
+  var startTime = new Date().getTime()/1000;
+  var uTime = 0;
 
   // Get the rendering context for WebGL
   var gl = getWebGLContext(canvas);
@@ -50,11 +63,29 @@ function main() {
     return;
   }
 
+  var u_hwr = gl.getUniformLocation(gl.program, 'u_hwr');
+  gl.uniform1f(u_hwr, heightWidthRatio);
+
+  var u_Time = gl.getUniformLocation(gl.program, 'u_Time');
+  gl.uniform1f(u_Time, uTime);
+
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);   // Clear <canvas>
 
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);   // Clear <canvas>
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, n); // Draw the rectangle
+
+  loop();
+
+  function loop() {
+    uTime = new Date().getTime()/1000 - startTime;
+    gl.uniform1f(u_Time, uTime);
+
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);  
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, n); 
+
+    window.requestAnimationFrame(loop);
+  }
 }
 
 function initVertexBuffers(gl) {

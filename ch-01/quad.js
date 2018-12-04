@@ -14,7 +14,6 @@ var FSHADER_SOURCE =
   '#ifdef GL_ES\n' +
   'precision mediump float;\n' +
   '#endif\n' +
-  'uniform sampler2D u_Sampler;\n' +
   'varying vec2 v_TexCoord;\n' +
   'void main() {\n' +
   '  gl_FragColor = vec4(v_TexCoord.x, v_TexCoord.y, abs(v_TexCoord.x - v_TexCoord.y), 1.0);\n' +
