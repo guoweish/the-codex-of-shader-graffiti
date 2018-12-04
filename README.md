@@ -3,7 +3,9 @@
 
 基于原生WebGL20，原因无他：“玩”要玩原生，“用”要用three！
 
-### CH-01：一张白纸；
+[知乎专栏：Shader涂鸦](https://zhuanlan.zhihu.com/c_1050419252401631232)
+
+### [CH-01：一张白纸；](https://zhuanlan.zhihu.com/p/51394976)
 ### CH-02：点线面体；
 ### CH-03：初识贴图；
 ### CH-04：随机不随机；
