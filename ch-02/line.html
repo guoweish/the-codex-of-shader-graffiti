@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>draw line in webgl canvas</title>
+    <style type="text/css">
+      body {
+        background: black;
+        margin: 0px;
+        padding: 0px;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body onload="main()">
+    <canvas id="example" width="400" height="400">
+      Please use a browser that supports "canvas"
+    </canvas>
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="../lib/cuon-matrix.js"></script>
+    <script src="line.js"></script>
+
+    <script id="vertexShader" type="x-shader/x-vertex">
+      attribute vec4 a_Position;
+      attribute vec2 a_TexCoord;
+      varying vec2 v_TexCoord;
+
+      void main()	{
+        v_TexCoord = a_TexCoord;
+				gl_Position = a_Position;
+			}
+    </script>
+
+    <script id="fragmentShader" type="x-shader/x-fragment">
+      precision highp float;
+
+      varying vec2 v_TexCoord;
+
+      void main()	{
+				float distPix = distance(v_TexCoord, vec2(0.5, 0.5));
+        float isCircle = 1.0 - step(0.3, distPix);
+        gl_FragColor = vec4(vec3(isCircle), 1.0);
+			}
+    </script>
+  </body>
+</html>
