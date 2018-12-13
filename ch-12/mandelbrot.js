@@ -4,13 +4,14 @@ function main() {
 
   var windowWidth = window.innerWidth;
   var windowHeight = window.innerHeight;
+  var heightWidthRatio = windowHeight / windowWidth;
 
   var canvas = document.getElementById('example');  
   canvas.width = windowWidth;
   canvas.height = windowHeight;
 
   // Get the rendering context for WebGL
-  var gl = getWebGLContext(canvas);
+  var gl = canvas.getContext('webgl2');
   if (!gl) {
     console.log('Failed to get the rendering context for WebGL');
     return;
@@ -28,6 +29,22 @@ function main() {
     console.log('Failed to set the vertex information');
     return;
   }
+
+  //set up uniforms
+  var u_HwRatio = gl.getUniformLocation(gl.program, 'u_HwRatio');
+  gl.uniform1f(u_HwRatio, heightWidthRatio);
+
+  var u_MaxIterations = gl.getUniformLocation(gl.program, 'u_MaxIterations');
+  gl.uniform1f(u_MaxIterations, 20.0);
+
+  var u_Zoom = gl.getUniformLocation(gl.program, 'u_Zoom');
+  gl.uniform1f(u_Zoom, 3.0);
+
+  var u_Xcenter = gl.getUniformLocation(gl.program, 'u_Xcenter');
+  gl.uniform1f(u_Xcenter, -3.5);
+
+  var u_Ycenter = gl.getUniformLocation(gl.program, 'u_Ycenter');
+  gl.uniform1f(u_Ycenter, -1.5);
 
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -68,14 +85,14 @@ function initVertexBuffers(gl) {
   gl.enableVertexAttribArray(a_Position);  // Enable the assignment of the buffer object
 
   // Get the storage location of a_TexCoord
-  var a_TexCoord = gl.getAttribLocation(gl.program, 'a_TexCoord');
-  if (a_TexCoord < 0) {
-    console.log('Failed to get the storage location of a_TexCoord');
+  var a_Uv = gl.getAttribLocation(gl.program, 'a_Uv');
+  if (a_Uv < 0) {
+    console.log('Failed to get the storage location of a_Uv');
     return -1;
   }
-  // Assign the buffer object to a_TexCoord variable
-  gl.vertexAttribPointer(a_TexCoord, 2, gl.FLOAT, false, FSIZE * 4, FSIZE * 2);
-  gl.enableVertexAttribArray(a_TexCoord);  // Enable the assignment of the buffer object
+  // Assign the buffer object to a_Uv variable
+  gl.vertexAttribPointer(a_Uv, 2, gl.FLOAT, false, FSIZE * 4, FSIZE * 2);
+  gl.enableVertexAttribArray(a_Uv);  // Enable the assignment of the buffer object
 
   return n;
 }
