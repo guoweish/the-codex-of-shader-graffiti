@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>circle sdf with offset</title>
+    <style type="text/css">
+      body {
+        background: black;
+        margin: 0px;
+        padding: 0px;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body onload="main()">
+    <canvas id="example" width="400" height="400">
+      Please use a browser that supports "canvas"
+    </canvas>
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="../lib/cuon-matrix.js"></script>
+    <script src="circle_sdf_offset.js"></script>
+
+    <script id="vertexShader" type="x-shader/x-vertex">#version 300 es
+      in vec4 a_Position;
+      in vec2 a_Uv;
+      out vec2 v_Uv;
+
+      void main()	{
+        v_Uv = a_Uv;
+				gl_Position = a_Position;
+			}
+    </script>
+
+    <script id="fragmentShader" type="x-shader/x-fragment">#version 300 es
+      precision highp float;
+
+      uniform float u_HwRatio;
+      in vec2 v_Uv;
+      out vec4 fragColor;
+
+      float circle (vec2 uv, float radius);
+      vec2 translate(vec2 uv, vec2 offset);
+
+      void main()	{
+        vec2 st = v_Uv - 0.5;
+        st.x /= u_HwRatio;
+
+        st = translate(st, vec2(0.3, 0.2));
+
+        float c = circle(st, 0.1);
+        float color = step(c, 0.0);
+        // float color = smoothstep(0.0, 0.005, c);
+
+        fragColor = vec4(vec3(color), 1.0);
+			}
+
+      float circle (vec2 uv, float radius) {
+        return (length(uv) - radius);
+      }
+
+      vec2 translate(vec2 uv, vec2 offset) {
+        return uv - offset;
+      }
+    </script>
+  </body>
+</html>
