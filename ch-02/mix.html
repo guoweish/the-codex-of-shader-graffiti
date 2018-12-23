@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>draw line in webgl canvas</title>
+    <style type="text/css">
+      body {
+        background: black;
+        margin: 0px;
+        padding: 0px;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body onload="main()">
+    <canvas id="example" width="400" height="400">
+      Please use a browser that supports "canvas"
+    </canvas>
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="../lib/cuon-matrix.js"></script>
+    <script src="mix.js"></script>
+
+    <script id="vertexShader" type="x-shader/x-vertex">#version 300 es
+      in vec4 a_Position;
+      in vec2 a_Uv;
+      out vec2 v_Uv;
+
+      void main()	{
+        v_Uv = a_Uv;
+				gl_Position = a_Position;
+			}
+    </script>
+
+    <script id="fragmentShader" type="x-shader/x-fragment">#version 300 es
+      precision highp float;
+
+      uniform float u_HwRatio;
+      in vec2 v_Uv;
+      out vec4 fragColor;
+
+      float createCircle (vec2 uv, float radius);
+      float createBox(vec2 uv, vec2 b );
+
+      void main()	{
+        vec2 uv = v_Uv - 0.5;
+        uv.x /= u_HwRatio;
+
+        vec4 backgroundColor = vec4(0.0);
+        vec4 circleColor = vec4(1.0, 0.7, 0.0, 1.0);
+        vec4 boxColor = vec4(1.0, 1.0, 1.0, 1.0);
+
+        float circle = createCircle(uv, 0.4);
+        fragColor = mix(circleColor, backgroundColor, circle);
+
+        float box = createBox(uv, vec2(0.21, 0.07));
+        fragColor = mix(boxColor, fragColor, box);
+
+        fragColor = vec4(fragColor);
+			}
+
+      float createCircle (vec2 uv, float radius) {
+        // return (length(uv) - radius);
+        float d = length(uv) - radius;
+        return (1.0 - step(d, 0.0));
+      }
+
+      float createBox(vec2 uv, vec2 b ) {
+        vec2 d = abs(uv)-b;
+        // return length(max(d,vec2(0))) + min(max(d.x,d.y),0.0);
+        float e = length(max(d,vec2(0.0))) + min(max(d.x,d.y),0.0);
+        return (1.0 - step(e, 0.0));
+      }
+    </script>
+  </body>
+</html>
