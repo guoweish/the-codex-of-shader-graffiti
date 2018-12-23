@@ -10,7 +10,7 @@ function main() {
   canvas.height = windowHeight;
 
   // Get the rendering context for WebGL
-  var gl = getWebGLContext(canvas);
+  var gl = canvas.getContext('webgl2');
   if (!gl) {
     console.log('Failed to get the rendering context for WebGL');
     return;

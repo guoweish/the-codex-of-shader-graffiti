@@ -43,23 +43,36 @@
 
       float createCircle (vec2 uv, float radius);
       float createBox(vec2 uv, vec2 b );
+      vec2 translate(vec2 uv, vec2 offset);
 
       void main()	{
         vec2 uv = v_Uv - 0.5;
         uv.x /= u_HwRatio;
 
-        vec4 backgroundColor = vec4(0.0);
-        vec4 circleColor = vec4(1.0, 0.7, 0.0, 1.0);
+        vec4 backgroundColor = vec4(1.0);
+        vec4 circleColor_1 = vec4(1.0, 0.7, 0.3, 0.7);
+        vec4 circleColor_2 = vec4(0.3, 1.0, 0.7, 0.7);
+        vec4 circleColor_3 = vec4(0.7, 0.3, 1.0, 0.7);
         vec4 boxColor = vec4(1.0, 1.0, 1.0, 1.0);
 
-        float circle = createCircle(uv, 0.4);
-        fragColor = mix(circleColor, backgroundColor, circle);
+        vec2 uv_1 = translate(uv, vec2(-0.2, 0.0));
+        float circle_1 = createCircle(uv_1, 0.3);
+        fragColor = mix(circleColor_1, backgroundColor, circle_1);
 
-        float box = createBox(uv, vec2(0.21, 0.07));
-        fragColor = mix(boxColor, fragColor, box);
+        vec2 uv_2 = translate(uv, vec2(0.0, 0.0));
+        float circle_2 = createCircle(uv_2, 0.3);
+        fragColor = mix(circleColor_2, fragColor, circle_2);
+
+        vec2 uv_3 = translate(uv, vec2(0.2, 0.0));
+        float circle_3 = createCircle(uv_3, 0.3);
+        fragColor = mix(circleColor_3, fragColor, circle_3);
 
         fragColor = vec4(fragColor);
 			}
+
+      vec2 translate(vec2 uv, vec2 offset) {
+        return uv - offset;
+      }
 
       float createCircle (vec2 uv, float radius) {
         // return (length(uv) - radius);

@@ -34,7 +34,7 @@ function main() {
   gl.uniform1f(u_HwRatio, heightWidthRatio);
 
   // Specify the color for clearing <canvas>
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clearColor(1.0, 1.0, 1.0, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);   // Clear <canvas>
 
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, n); // Draw the rectangle
